@@ -1,0 +1,44 @@
+[tool.poetry]
+packages = [{include = "aissemble_open_inference_protocol_use_case", from = "src"}]
+
+[project]
+name = "aissemble-open-inference-protocol-use-case"
+version = "1.0.0.dev"
+description = "An Example of the Open Inference Protocol Use Case"
+authors = [
+    {name = "aiSSEMBLE Solutions Community", email = "aissemble@bah.com"}
+]
+requires-python = ">=3.10,<3.13"
+dynamic = ["version", "dependencies"]
+
+
+
+[tool.poetry.dependencies]
+fastapi = {extras = ["standard"], version = ">=0.116.1"}
+
+# comment out both fastapi and grpc endpoint packages if using kserve because of dependencies conflict
+#aissemble-open-inference-protocol-fastapi = "1.1.0.*"
+#aissemble-open-inference-protocol-grpc = "1.1.0.*"
+
+# uncomment to switch to kserve endpoints
+aissemble-open-inference-protocol-kserve = "1.1.0.*"
+
+ultralytics = ">=8.3.203"
+torch = ">=1.8"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.11.12"
+behave = "^1.2.6"
+kappa-maki = "^1.0.2"
+
+[tool.poetry.scripts]
+run_server = "aissemble_open_inference_protocol_use_case.main:main"
+
+[[tool.poetry.source]]
+name = "devpypi"
+url = "https://test.pypi.org/simple/"
+priority = "supplemental"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"

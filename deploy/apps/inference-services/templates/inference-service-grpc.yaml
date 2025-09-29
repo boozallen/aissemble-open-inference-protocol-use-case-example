@@ -1,0 +1,18 @@
+{{ if false }}
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: kserve-model-grpc
+spec:
+  predictor:
+    containers:
+      - name: "oip-use-case"
+        image: oip-use-case:1.0.0-SNAPSHOT
+        args:
+          - --enable_grpc=true
+          - --grpc_port=8081
+        ports:
+          - name: h2c
+            containerPort: 8081
+            protocol: TCP
+{{ end }}

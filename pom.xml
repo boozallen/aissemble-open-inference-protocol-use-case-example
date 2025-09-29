@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>aissemble-open-inference-protocol-use-case</artifactId>
+    <packaging>habushu</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>aiSSEMBLE::Open Inference Protocol Examples::FastAPI Inference</name>
+    <description>Example of how to use the FastAPI Open Interface protocol</description>
+
+    <properties>
+        <!-- io.fabric8:docker-maven-plugin -->
+        <version.fabric8.docker.maven.plugin>0.45-tb-0.1.0</version.fabric8.docker.maven.plugin>
+        <docker.platforms>linux/amd64,linux/arm64</docker.platforms>
+        <group.fabric8.plugin>org.technologybrewery.fabric8</group.fabric8.plugin>
+        <docker.repo.id/>
+        <docker.image.name>oip-use-case</docker.image.name>
+        <docker.image.version>${project.version}</docker.image.version>
+    </properties>
+    <build>
+        <directory>dist</directory>
+        <plugins>
+            <plugin>
+                <groupId>org.technologybrewery.habushu</groupId>
+                <artifactId>habushu-maven-plugin</artifactId>
+                <!-- update to use v3.3.0 when habushu is released -->
+                <version>3.3.0-SNAPSHOT</version>
+                <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <!--
+                    NB: using a temporary fork of the docker-maven-plugin for faster local builds.
+                    This can be removed once https://github.com/fabric8io/docker-maven-plugin/issues/1804
+                    is incorporated into the io.fabric8 plugin directly.
+                  -->
+                <groupId>${group.fabric8.plugin}</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${version.fabric8.docker.maven.plugin}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>docker-build</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>${docker.repo.id}${docker.image.name}:${docker.image.version}</name>
+                            <build>
+                                <buildx>
+                                    <builderName>default</builderName>
+                                    <!-- use a separate state dir to ensure pre-configured credentials are not deleted -->
+                                    <dockerStateDir>~/.docker/fabric8</dockerStateDir>
+                                    <platforms>
+                                        <platform>${docker.platforms}</platform>
+                                    </platforms>
+                                </buildx>
+                                <contextDir>${project.basedir}</contextDir>
+                                <dockerFile>./Dockerfile</dockerFile>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>skip-docker</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>${group.fabric8.plugin}</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
+                            <configuration>
+                                <skip>true</skip>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
