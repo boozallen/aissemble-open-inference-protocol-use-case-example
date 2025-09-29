@@ -24,7 +24,17 @@ fastapi = {extras = ["standard"], version = ">=0.116.1"}
 aissemble-open-inference-protocol-kserve = "1.1.0.*"
 
 ultralytics = ">=8.3.203"
-torch = ">=1.8"
+
+# PyTorch stopped providing x86_64 macOS wheels after 2.2.2
+# See: https://github.com/pytorch/pytorch/issues/114602
+torch = [
+    { version = "==2.2.2", markers = "sys_platform == 'darwin' and platform_machine == 'x86_64'" },
+    { version = ">=2.4,<3.0", markers = "sys_platform != 'darwin' or platform_machine != 'x86_64'" }
+]
+
+numpy = [
+    { version = "<2.0", markers = "sys_platform == 'darwin' and platform_machine == 'x86_64'" }
+]
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.12"
