@@ -54,6 +54,8 @@ def start_oip_kserve(oip_handler, model_name):
     # model needs to be loaded before server start
     kserve.load()
     kserve.start_server()
+
+
 ## end of kserve function definition
 
 

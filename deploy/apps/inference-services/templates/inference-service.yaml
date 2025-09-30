@@ -7,6 +7,10 @@ spec:
     containers:
       - name: "oip-use-case"
         image: oip-use-case:1.0.0-SNAPSHOT
-        env:
-          - name: KSERVE_HTTP_PORT
-            value: "8080"
+        ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8081
+            name: grpc
+            protocol: TCP
