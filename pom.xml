@@ -4,13 +4,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.boozallen.aissemble</groupId>
+        <artifactId>aissemble-parent</artifactId>
+        <version>7</version>
+        <relativePath />
+    </parent>
+
     <groupId>com.example</groupId>
     <artifactId>aissemble-open-inference-protocol-use-case</artifactId>
     <packaging>habushu</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>aiSSEMBLE::Open Inference Protocol Examples::FastAPI Inference</name>
-    <description>Example of how to use the FastAPI Open Interface protocol</description>
+    <name>aiSSEMBLE::Open Inference Protocol Use Cases::FastAPI, gRPC, and Kserve Inference</name>
+    <description>Example of how to use the aiSSEMBLE Open Inference protocol</description>
+
+    <licenses>
+        <license>
+            <name>Booz Allen Public License v1.0</name>
+            <url>https://github.com/boozallen/Public-License/blob/master/LICENSE.md</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
 
     <properties>
         <!-- io.fabric8:docker-maven-plugin -->
@@ -69,6 +85,11 @@
                         </image>
                     </images>
                 </configuration>
+            </plugin>
+            <!-- Apply licenses automatically -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
