@@ -338,3 +338,40 @@ mvn clean install -Pskip-docker
    localhost:8081 inference.GrpcInferenceService/ModelInfer   
    ```
    **Note**: gRPC requires the inputs data in encoded state so the image path has been encoded using base64 (i.e.: `echo -n "src/resources/images/cat.png" | base64`)
+
+## Run FastAPI with authentication enabled
+
+In this example we will enable authentication and attempt to make an inference call using a generated JWT token.  The token will include an authorized username, which will permit users to call inference.  
+Part of this example is running an Authzforce service, which will be handled by the launch example code (step 4).
+
+1. Run the pyproject.toml step from the [Deploy FastAPI section](README.md#pyprojecttoml-1), but !!!IMPORTANT!!! Stop after the pyproject.toml section.
+2. Edit `src/resources/krausening/base/oip.properties` and change `auth_enabled=false` to `auth_enabled=true`
+3. Run the build `mvn clean install -Pskip-docker` Note: if you get a build error, try deleting the poetry.lock file.
+4. Start the aiSSEMBLE OIP FastAPI endpoint and the Authzforce server
+   ```bash
+   python ./src/aissemble_open_inference_protocol_use_case/launch_fastapi_auth_example.py
+   ```
+5. In another terminal, run the following command to generate a JWT token and store it in the `OIP_JWT` environment variable (will be used in the inference request)
+   ```bash
+   export OIP_JWT=$(python src/aissemble_open_inference_protocol_use_case/generate_simple_jwt.py | jq -r .jwt)
+   ```
+6. Once the services are up and ready (step 4), run a curl command with the JWT token stored in `OIP_JWT`
+   ```bash
+   curl -X "POST" -w "\nHTTP Code: %{http_code}\n" \
+   "http://127.0.0.1:8000/v2/models/yolo11n/infer" \
+   -H 'Content-Type: application/json' \
+   -H "Authorization: Bearer $OIP_JWT" \
+   -d '{"id" : "2214",
+   "inputs" : [{
+   "name" : "sample",
+   "shape" : [3],
+   "datatype"  : "BYTES",
+   "data" : ["src/resources/images/cat.png","src/resources/images/bus.png","https://ultralytics.com/images/bus.jpg"]
+       }]}'
+   ```
+7. You should get a 200 response code and an inference for the images sent.
+
+
+
+
+

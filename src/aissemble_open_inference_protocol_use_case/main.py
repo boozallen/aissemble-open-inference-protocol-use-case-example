@@ -1,6 +1,6 @@
 ###
 # #%L
-# aiSSEMBLE::Open Inference Protocol Examples::FastAPI Inference
+# aiSSEMBLE::Open Inference Protocol Use Cases::FastAPI, gRPC, and Kserve Inference
 # %%
 # Copyright (C) 2024 Booz Allen Hamilton Inc.
 # %%
